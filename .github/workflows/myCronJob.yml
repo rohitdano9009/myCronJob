@@ -4,11 +4,29 @@ on:
   schedule:
     - cron: '*/5 * * * *'
 
+    
 jobs:
-  build:
-    name: Trigger Code Checkout
+  check-status:
     runs-on: ubuntu-latest
     steps:
-    - uses: action/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Get deployment status
+        id: get_status
+        run: |
+          # Your command to get the deployment status goes here
+          # For example, if you have a script to check status, replace the following line with your script invocation
+          echo "::set-output name=status::Pass" # Simulating a Pass status for demonstration
+
+      - name: Check status and execute command if Pass
+        if: ${{ steps.get_status.outputs.status == 'Pass' }}
+        run: |
+          # Execute your Salesforce command using Apex here
+          # For example, executing the System.schedule command
+          echo "Executing Salesforce command"
+          # Replace the following line with your actual Salesforce command
+          echo "System.schedule('Integration Services Retry Schedule Job', '0 0   * ?', new sf_lms_IntegrationServiceRetrySchedule(20));"
+
   
 
